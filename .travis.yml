@@ -14,3 +14,10 @@ after_success:
   - docker build -t protickr/multi-nginx ./nginx
   - docker build -t protickr/multi-server ./server
   - docker build -t protickr/multi-worker ./worker
+  # log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # after building all images we need to push them to docker hub
+  - docker push protickr/multi-client
+  - docker push protickr/multi-nginx
+  - docker push protickr/multi-server
+  - docker push protickr/multi-worker
