@@ -1,0 +1,2 @@
+two nginx server 1 responsible for overall app routing e.g., from request to different backend services/servers 
+and 1 for serving react application's production built static files.
