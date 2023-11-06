@@ -21,3 +21,17 @@ after_success:
   - docker push protickr/multi-nginx
   - docker push protickr/multi-server
   - docker push protickr/multi-worker
+
+
+deploy:
+  provider: elasticbeanstalk 
+  on: 
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
+  region: "ap-southeast-2"
+  app: "multi-docker"
+  env: "Multi-docker-env"
+  bucket_name: "elasticbeanstalk-ap-southeast-2-460084874789"
+  path: 'multi-docker'

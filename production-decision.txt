@@ -1,2 +1,5 @@
 two nginx server 1 responsible for overall app routing e.g., from request to different backend services/servers 
 and 1 for serving react application's production built static files.
+
+AWS EBS does not use Dockerrun.aws.json file anymore to run docker containers instead it uses 
+docker-compose.yml file by default to run multi container applicaiton

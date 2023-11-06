@@ -1,56 +1,31 @@
-version: '3'
+version: "3"
 services:
-  postgres: 
-    image: 'postgres:latest'
-    environment: 
-      - POSTGRES_PASSWORD=postgres_password
-  redis: 
-    image: 'redis:latest'
-
-  nginx: 
-    restart: always
-    depends_on:
-      - api
-      - client
-    build: 
-      dockerfile: Dockerfile.dev
-      context: ./nginx
+  client:
+    image: "protickr/multi-client"
+    mem_limit: 128m
+    hostname: client
+  server:
+    image: "protickr/multi-server"
+    mem_limit: 128m
+    hostname: api
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+      - PGUSER=$PGUSER
+      - PGHOST=$PGHOST
+      - PGDATABASE=$PGDATABASE
+      - PGPASSWORD=$PGPASSWORD
+      - PGPORT=$PGPORT
+  worker:
+    image: "protickr/multi-worker"
+    mem_limit: 128m
+    hostname: worker
+    environment:
+      - REDIS_HOST=$REDIS_HOST
+      - REDIS_PORT=$REDIS_PORT
+  nginx:
+    image: "protickr/multi-nginx"
+    mem_limit: 128m
+    hostname: nginx
     ports:
-      - "3050:80" 
-
-  api: 
-    build: 
-      dockerfile: Dockerfile.dev
-      context: ./server
-    volumes:
-      - /home/node/app/node_modules
-      - ./server:/home/node/app
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - PGUSER=postgres
-      - PGHOST=postgres
-      - PGDATABASE=postgres
-      - PGPASSWORD=postgres_password
-      - PGPORT=5432
-
-  client: 
-    environment:
-      - WDS_SOCKET_PORT=0
-    build: 
-      dockerfile: Dockerfile.dev
-      context: ./client
-    volumes:
-      - /home/node/app/node_modules
-      - ./client:/home/node/app
-
-  worker: 
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    build: 
-      dockerfile: Dockerfile.dev
-      context: ./worker
-    volumes:
-      - /home/node/app/node_modules
-      - ./worker:/home/node/app
+      - "80:80"
